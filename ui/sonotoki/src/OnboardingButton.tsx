@@ -31,6 +31,46 @@ export function useOnboardingButton() {
         }
     }, [accounts]);
 
+
+    React.useEffect(() => {
+        (async () => {
+            if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{chainId: "0xa",}],
+                    })
+                } catch (error: any) {
+                    if (error.code === 4902) {
+                        try {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [
+                                    {
+                                        chainId: "0xa",
+                                        chainName: 'Optimism Mainnet',
+                                        nativeCurrency: {
+                                            name: "ETH",
+                                            symbol: "ETH",
+                                            decimals: 18,
+                                        },
+                                        rpcUrls: ['https://mainnet.optimism.io'],
+                                        blockExplorerUrls: ['https://explorer.optimism.io/']
+                                    },
+                                ],
+                            });
+                        } catch (addError) {
+                            console.error(addError);
+                        }
+                    }
+                }
+            }
+        })();
+        return () => {
+        };
+    }, [])
+
+
     React.useEffect(() => {
         function handleNewAccounts(newAccounts: React.SetStateAction<never[]>) {
             setAccounts(newAccounts);

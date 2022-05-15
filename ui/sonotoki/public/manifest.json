@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Sonotoki",
+  "name": "Blockchain backed Proof of When.",
   "icons": [
     {
       "src": "favicon.ico",

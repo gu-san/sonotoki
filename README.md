@@ -15,6 +15,16 @@ Proof of when (or before)
 
 * SonoToki only aims to prove the `data` was produced before `t_to`
 
+### Frequently Asked Questions
+
+* Have the Smart Contracts been audited?
+** No, auditing costs money.  The contracts are available in Source Control and the verified contracts have been uploaded to https://optimistic.etherscan.io/address/0x6d93556339ada77b5d1814b84101b8bb1572578c
+
+* Will this actually be useful as evidence?
+** This hasn't been tested in court.
+
+
+
 ### Running locally
 
 ####Compiling the contract
