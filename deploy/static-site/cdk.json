@@ -1,0 +1,9 @@
+{
+  "app": "python3 app.py",
+  "context": {
+    "namespace": "sonotoki",
+    "domain_name": "sonotoki.org",
+    "hosted_zone_id": "REPLACEME",
+    "hosted_zone_name": "sonotoki.org."
+  }
+}

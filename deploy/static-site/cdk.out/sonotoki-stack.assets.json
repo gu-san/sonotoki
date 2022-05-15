@@ -1,0 +1,48 @@
+{
+  "version": "18.0.0",
+  "files": {
+    "483ae06ed27ef8ca76e011264d772420593a6cfe8544759c306ef3b98c9e25be": {
+      "source": {
+        "path": "asset.483ae06ed27ef8ca76e011264d772420593a6cfe8544759c306ef3b98c9e25be",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "861293898283-ap-southeast-2": {
+          "bucketName": "cdk-hnb659fds-assets-861293898283-ap-southeast-2",
+          "objectKey": "483ae06ed27ef8ca76e011264d772420593a6cfe8544759c306ef3b98c9e25be.zip",
+          "region": "ap-southeast-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::861293898283:role/cdk-hnb659fds-file-publishing-role-861293898283-ap-southeast-2"
+        }
+      }
+    },
+    "b283b3813e8acf3b0198620b2d8b35db67a211da4f04c3d720a89d54cfb2f9bc": {
+      "source": {
+        "path": "asset.b283b3813e8acf3b0198620b2d8b35db67a211da4f04c3d720a89d54cfb2f9bc",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "861293898283-ap-southeast-2": {
+          "bucketName": "cdk-hnb659fds-assets-861293898283-ap-southeast-2",
+          "objectKey": "b283b3813e8acf3b0198620b2d8b35db67a211da4f04c3d720a89d54cfb2f9bc.zip",
+          "region": "ap-southeast-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::861293898283:role/cdk-hnb659fds-file-publishing-role-861293898283-ap-southeast-2"
+        }
+      }
+    },
+    "e5400ce00117dfeff1aa302fce3ef55019f96bb641b23fea1c32542835fa8b8e": {
+      "source": {
+        "path": "sonotoki-stack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "861293898283-ap-southeast-2": {
+          "bucketName": "cdk-hnb659fds-assets-861293898283-ap-southeast-2",
+          "objectKey": "e5400ce00117dfeff1aa302fce3ef55019f96bb641b23fea1c32542835fa8b8e.json",
+          "region": "ap-southeast-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::861293898283:role/cdk-hnb659fds-file-publishing-role-861293898283-ap-southeast-2"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

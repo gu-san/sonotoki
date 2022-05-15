@@ -1,0 +1,8 @@
+[
+  "constructor()",
+  "event DeleteProof(address indexed,bytes32 indexed)",
+  "event StoreProof(address indexed,bytes32 indexed)",
+  "function deleteProof(bytes32)",
+  "function proofs(bytes32) view returns (address, uint256)",
+  "function storeProof(bytes32)"
+]

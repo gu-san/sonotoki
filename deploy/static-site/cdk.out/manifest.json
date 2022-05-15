@@ -1,0 +1,160 @@
+{
+  "version": "18.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "sonotoki-stack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "sonotoki-stack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "sonotoki-stack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://861293898283/ap-southeast-2",
+      "properties": {
+        "templateFile": "sonotoki-stack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::861293898283:role/cdk-hnb659fds-deploy-role-861293898283-ap-southeast-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::861293898283:role/cdk-hnb659fds-cfn-exec-role-861293898283-ap-southeast-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-861293898283-ap-southeast-2/e5400ce00117dfeff1aa302fce3ef55019f96bb641b23fea1c32542835fa8b8e.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "sonotoki-stack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::861293898283:role/cdk-hnb659fds-lookup-role-861293898283-ap-southeast-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "sonotoki-stack.assets"
+      ],
+      "metadata": {
+        "/sonotoki-stack/sonotoki-construct/site_bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitebucket85A18FB1"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/site_bucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitebucketPolicy395D8710"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/site_bucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitebucketAutoDeleteObjectsCustomResource375AAD91"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorFunction/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleC0230602"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorFunction/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleDefaultPolicyEDB41178"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitecertificateCertificateRequestorFunction5C54AFF1"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitecertificateCertificateRequestorResourceD76C8D85"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/cloudfront_distribution/Origin1/S3Origin/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructcloudfrontdistributionOrigin1S3Origin457B8314"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/cloudfront_distribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructcloudfrontdistribution652C9ED3"
+          }
+        ],
+        "/sonotoki-stack/sonotoki-construct/site-alias-record/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sonotokiconstructsitealiasrecord119B7C84"
+          }
+        ],
+        "/sonotoki-stack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/sonotoki-stack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/sonotoki-stack/AWSCloudFrontPartitionHostedZoneIdMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSCloudFrontPartitionHostedZoneIdMap"
+          }
+        ],
+        "/sonotoki-stack/SiteBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SiteBucketName"
+          }
+        ],
+        "/sonotoki-stack/DistributionId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DistributionId"
+          }
+        ],
+        "/sonotoki-stack/CertificateArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CertificateArn"
+          }
+        ],
+        "/sonotoki-stack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/sonotoki-stack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/sonotoki-stack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "sonotoki-stack"
+    }
+  }
+}

@@ -1,0 +1,503 @@
+{
+ "Description": "Static Site using S3, CloudFront and Route53",
+ "Resources": {
+  "sonotokiconstructsitebucket85A18FB1": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "BucketName": "sonotoki.org",
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site_bucket/Resource"
+   }
+  },
+  "sonotokiconstructsitebucketPolicy395D8710": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "sonotokiconstructsitebucket85A18FB1"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "sonotokiconstructsitebucket85A18FB1",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "sonotokiconstructsitebucket85A18FB1",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:GetObject",
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "sonotokiconstructcloudfrontdistributionOrigin1S3Origin457B8314",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "sonotokiconstructsitebucket85A18FB1",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site_bucket/Policy/Resource"
+   }
+  },
+  "sonotokiconstructsitebucketAutoDeleteObjectsCustomResource375AAD91": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "sonotokiconstructsitebucket85A18FB1"
+    }
+   },
+   "DependsOn": [
+    "sonotokiconstructsitebucketPolicy395D8710"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site_bucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleC0230602": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorFunction/ServiceRole/Resource"
+   }
+  },
+  "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleDefaultPolicyEDB41178": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "acm:RequestCertificate",
+        "acm:DescribeCertificate",
+        "acm:DeleteCertificate",
+        "acm:AddTagsToCertificate"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "route53:GetChange",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "route53:changeResourceRecordSets",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":route53:::hostedzone/Z01141721KSY4DC2DKLQR"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleDefaultPolicyEDB41178",
+    "Roles": [
+     {
+      "Ref": "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleC0230602"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "sonotokiconstructsitecertificateCertificateRequestorFunction5C54AFF1": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-861293898283-ap-southeast-2",
+     "S3Key": "b283b3813e8acf3b0198620b2d8b35db67a211da4f04c3d720a89d54cfb2f9bc.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleC0230602",
+      "Arn"
+     ]
+    },
+    "Handler": "index.certificateRequestHandler",
+    "Runtime": "nodejs12.x",
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleDefaultPolicyEDB41178",
+    "sonotokiconstructsitecertificateCertificateRequestorFunctionServiceRoleC0230602"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorFunction/Resource",
+    "aws:asset:path": "asset.b283b3813e8acf3b0198620b2d8b35db67a211da4f04c3d720a89d54cfb2f9bc",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "sonotokiconstructsitecertificateCertificateRequestorResourceD76C8D85": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "sonotokiconstructsitecertificateCertificateRequestorFunction5C54AFF1",
+      "Arn"
+     ]
+    },
+    "DomainName": "sonotoki.org",
+    "HostedZoneId": "Z01141721KSY4DC2DKLQR",
+    "Region": "us-east-1"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site_certificate/CertificateRequestorResource/Default"
+   }
+  },
+  "sonotokiconstructcloudfrontdistributionOrigin1S3Origin457B8314": {
+   "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+   "Properties": {
+    "CloudFrontOriginAccessIdentityConfig": {
+     "Comment": "Identity for sonotokistacksonotokiconstructcloudfrontdistributionOrigin17B8B0508"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/cloudfront_distribution/Origin1/S3Origin/Resource"
+   }
+  },
+  "sonotokiconstructcloudfrontdistribution652C9ED3": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Aliases": [
+      "sonotoki.org"
+     ],
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "TargetOriginId": "sonotokistacksonotokiconstructcloudfrontdistributionOrigin17B8B0508",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "DomainName": {
+        "Fn::GetAtt": [
+         "sonotokiconstructsitebucket85A18FB1",
+         "RegionalDomainName"
+        ]
+       },
+       "Id": "sonotokistacksonotokiconstructcloudfrontdistributionOrigin17B8B0508",
+       "S3OriginConfig": {
+        "OriginAccessIdentity": {
+         "Fn::Join": [
+          "",
+          [
+           "origin-access-identity/cloudfront/",
+           {
+            "Ref": "sonotokiconstructcloudfrontdistributionOrigin1S3Origin457B8314"
+           }
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "ViewerCertificate": {
+      "AcmCertificateArn": {
+       "Fn::GetAtt": [
+        "sonotokiconstructsitecertificateCertificateRequestorResourceD76C8D85",
+        "Arn"
+       ]
+      },
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/cloudfront_distribution/Resource"
+   }
+  },
+  "sonotokiconstructsitealiasrecord119B7C84": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "Name": "sonotoki.org.",
+    "Type": "A",
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "sonotokiconstructcloudfrontdistribution652C9ED3",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z01141721KSY4DC2DKLQR"
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/sonotoki-construct/site-alias-record/Resource"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-861293898283-ap-southeast-2",
+     "S3Key": "483ae06ed27ef8ca76e011264d772420593a6cfe8544759c306ef3b98c9e25be.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs12.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "sonotokiconstructsitebucket85A18FB1"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.483ae06ed27ef8ca76e011264d772420593a6cfe8544759c306ef3b98c9e25be",
+    "aws:asset:property": "Code"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/3VQQWrDMBB8S+6KSuMGenUcAj2UBAd6DbK0drexpaBdtQSjv9eWk7oUeprRaGd22JVcPcnHhfqipTbnZYuV7I+s9FkM0qmnTPaboM/AoqjtjU1wcC3q6yzf3tNjowii0OAZa9SKoVNWNeDl1tKbatEMkinmb9GqrjJK9rtgNaOzY+6dR4Gqk33pWhjlhPP2iUVB2UkRAZPMRxC6dcHU3lmW/RaJPVYhJe89NmhzrYHoxYBl5BRUjIbdaPhv4ndMFN4FhvVwoLwE7bxJ3RI7AscoikDsuhLIBa+n5nf+Q1LV4d7DuuaP4eDdJxrwo/FVXS5porb7wJfAURyu/O7sQyaf5XrxQYhLH4aiHchywm/wNg0X2gEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "sonotoki-stack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Mappings": {
+  "AWSCloudFrontPartitionHostedZoneIdMap": {
+   "aws": {
+    "zoneId": "Z2FDTNDATAQYW2"
+   },
+   "aws-cn": {
+    "zoneId": "Z3RFFRIM2A3IF5"
+   }
+  }
+ },
+ "Outputs": {
+  "SiteBucketName": {
+   "Value": {
+    "Ref": "sonotokiconstructsitebucket85A18FB1"
+   }
+  },
+  "DistributionId": {
+   "Value": {
+    "Ref": "sonotokiconstructcloudfrontdistribution652C9ED3"
+   }
+  },
+  "CertificateArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "sonotokiconstructsitecertificateCertificateRequestorResourceD76C8D85",
+     "Arn"
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
